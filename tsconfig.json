@@ -5,7 +5,17 @@
         "rootDir": "./",
         "outDir": "./build",
         "esModuleInterop": true,
-        "strict": true
+        "strict": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "@db/*": ["src/db/*"],
+            "@models/*": ["src/models/*"],
+            "@interfaces/*": ["src/interfaces/*"],
+            "@exceptions/*": ["src/exceptions/*"],
+            "@enums/*": ["src/helpers/enums/*"]
+        }
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]
