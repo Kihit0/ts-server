@@ -12,7 +12,7 @@
         "paths": {
             "@db/*": ["src/db/*"],
             "@models/*": ["src/models/*"],
-            "@interfaces/*": ["src/interfaces/*"],
+            "@interfaces/*": ["src/helpers/interfaces/*"],
             "@exceptions/*": ["src/exceptions/*"],
             "@enums/*": ["src/helpers/enums/*"]
         }

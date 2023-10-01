@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import prisma from "@db/prisma";
-import { IUser } from "@interfaces/user.interface";
+import { IUser } from "src/helpers/interfaces/user.interface";
 import { AppError } from "@exceptions/AppError";
 import { HttpCode } from "@enums/HttpStatusCode";
 
@@ -41,8 +41,6 @@ export class UserService {
     return user;
   };
 
-  //PrismaClientKnownRequestError      
-
   public createUser = async (body: IUser) => {
     const createUser = await this.prisma.user.create({
       data: body,
@@ -69,25 +67,25 @@ export class UserService {
     }
 
     const updateUser = await this.prisma.user.update({
-        where: { id: id },
-        data: body,
-      });
-  
+      where: { id: id },
+      data: body,
+    });
+
     return updateUser;
   };
 
   public deleteUser = async (id: string) => {
     const user = await this.getOneUser(id);
-    
+
     if (!user) {
       throw new AppError({
         httpCode: HttpCode.BAD_REQUEST,
         description: "Failed to update user",
       });
     }
-    
+
     const deleteUser = await this.prisma.user.delete({
-      where: { id:  id },
+      where: { id: id },
     });
 
     return deleteUser;
