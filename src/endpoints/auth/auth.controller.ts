@@ -11,8 +11,8 @@ export class AuthController {
 
   @Post("/login")
   async loggin(@Body() user: any) {
-    const userDetails = await this.AuthService.getUser(user);
-    const tokenDetails = await this.AuthService.getTokens(userDetails.id);
+    const login = await this.AuthService.login(user);
+    return login;
   }
 
   @Post("/register")

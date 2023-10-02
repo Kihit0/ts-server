@@ -15,10 +15,10 @@ export class AuthService {
     this.prisma = prisma;
   }
 
-  public async getUser(user: any) {
+  private async getUser(user: any) {
     const findUser = await this.prisma.user.findUnique({
       where: {
-        id: user.email,
+        email: user.email,
       },
     });
 
@@ -32,15 +32,15 @@ export class AuthService {
     return findUser;
   }
 
-  public async getTokens(userId: number) {
+  private async getToken(userId: number) {
     const token = await this.prisma.token.findUnique({
-      where: { id: userId },
+      where: { userId: userId },
     });
 
     if (!token) {
       throw new AppError({
-        httpCode: HttpCode.BAD_GATEWAY,
-        description: "User not found",
+        httpCode: HttpCode.UNAUTHORIZED,
+        description: "Token not valid",
       });
     }
 
@@ -55,23 +55,28 @@ export class AuthService {
       });
     }
 
-    const findUser = await this.prisma.user.findUnique({
-      where: { id: user.id },
-    });
+    const findUser = await this.getUser(user);
+    const token = await this.getToken(findUser.id)
+    const tokenBack = token.token.split(".");
+    const tokenFront = user.token.split(".");
 
-    if (!findUser) {
+    if (tokenBack.length !== tokenFront.length) {
       throw new AppError({
-        httpCode: HttpCode.BAD_GATEWAY,
-        description: "User not found",
+        httpCode: HttpCode.UNAUTHORIZED,
+        description: "Token not valid",
       });
+    } else {
+      for (let i = 0; i < 3; i++) {
+        if (tokenBack[i] !== tokenFront[i]) {
+          throw new AppError({
+            httpCode: HttpCode.UNAUTHORIZED,
+            description: "Token not valid",
+          });
+        }
+      }
     }
 
-    const token = await this.prisma.token.findFirst({
-      where: {
-        userId: findUser.id,
-      },
-    });
-    
+    return Object.assign(findUser,{token: token.token});
   }
 
   public async createUser(user: IUser) {
