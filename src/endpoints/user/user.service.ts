@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import prisma from "@db/prisma";
-import { IUser } from "src/helpers/interfaces/user.interface";
+import { IUser } from "@endpoints/user/user.interface";
 import { AppError } from "@exceptions/AppError";
 import { HttpCode } from "@enums/HttpStatusCode";
 
@@ -24,7 +24,7 @@ export class UserService {
     return users;
   };
 
-  public getOneUser = async (id: string) => {
+  public getOneUser = async (id: number) => {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -42,8 +42,10 @@ export class UserService {
   };
 
   public createUser = async (body: IUser) => {
+    const date: Date = new Date();
+    const user = Object.assign(body, {createDate: date});
     const createUser = await this.prisma.user.create({
-      data: body,
+      data: user,
     });
 
     if (!createUser) {
@@ -56,7 +58,7 @@ export class UserService {
     return createUser;
   };
 
-  public updateUser = async (id: string, body: any) => {
+  public updateUser = async (id: number, body: any) => {
     const user = await this.getOneUser(id);
 
     if (!user) {
@@ -74,7 +76,7 @@ export class UserService {
     return updateUser;
   };
 
-  public deleteUser = async (id: string) => {
+  public deleteUser = async (id: number) => {
     const user = await this.getOneUser(id);
 
     if (!user) {

@@ -11,7 +11,7 @@
         "baseUrl": ".",
         "paths": {
             "@db/*": ["src/db/*"],
-            "@models/*": ["src/models/*"],
+            "@endpoints/*": ["src/endpoints/*"],
             "@interfaces/*": ["src/helpers/interfaces/*"],
             "@exceptions/*": ["src/exceptions/*"],
             "@enums/*": ["src/helpers/enums/*"]

@@ -8,7 +8,7 @@ import {
   Delete,
 } from "routing-controllers";
 import { UserService } from "./user.service";
-import { IUser } from "@interfaces/user.interface";
+import { IUser } from "@endpoints/user/user.interface";
 
 @JsonController("/users")
 export class UserController {
@@ -25,7 +25,7 @@ export class UserController {
   }
 
   @Get("/:id")
-  async getOneUser(@Param("id") id: string): Promise<IUser> {
+  async getOneUser(@Param("id") id: number): Promise<IUser> {
     const user = await this.userServise.getOneUser(id);
     return user;
   }
@@ -37,13 +37,13 @@ export class UserController {
   }
 
   @Put("/:id")
-  async updateUser(@Param("id") id: string, @Body() user: any): Promise<IUser> {
+  async updateUser(@Param("id") id: number, @Body() user: any): Promise<IUser> {
     const updateUser = await this.userServise.updateUser(id, user);
     return updateUser;
   }
 
   @Delete("/:id")
-  async deleteUser(@Param("id") id: string): Promise<IUser> {
+  async deleteUser(@Param("id") id: number): Promise<IUser> {
     const deleteUser = await this.userServise.deleteUser(id);
     return deleteUser;
   }
