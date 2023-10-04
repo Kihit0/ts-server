@@ -162,10 +162,12 @@ export class AuthService {
       });
     }
 
-    const deleteUser = this.prisma.user.delete({
+    const deleteUser = await this.prisma.user.delete({
       where: { id },
     });
 
-    return deleteUser;
+    const {password, ...dUser} = deleteUser;
+
+    return dUser;
   }
 }

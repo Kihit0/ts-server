@@ -23,11 +23,11 @@ class App {
       controllers: [UserController, AuthController],
     }).listen(PORT);
 
-    process.on("beforeExit", async() => {
+    process.on("beforeExit", async () => {
       await this.prisma.$disconnect();
     });
   };
 }
 
 export const app = new App();
-app.__init__()
+app.__init__();

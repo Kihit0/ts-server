@@ -1,22 +1,22 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "module": "CommonJS",
-        "rootDir": "./",
-        "outDir": "./build",
-        "esModuleInterop": true,
-        "strict": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "baseUrl": ".",
-        "paths": {
-            "@db/*": ["src/db/*"],
-            "@endpoints/*": ["src/endpoints/*"],
-            "@interfaces/*": ["src/helpers/interfaces/*"],
-            "@exceptions/*": ["src/exceptions/*"],
-            "@enums/*": ["src/helpers/enums/*"]
-        }
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+    "target": "es6",
+    "module": "CommonJS",
+    "rootDir": "./",
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@db/*": ["src/db/*"],
+      "@endpoints/*": ["src/endpoints/*"],
+      "@interfaces/*": ["src/helpers/interfaces/*"],
+      "@exceptions/*": ["src/exceptions/*"],
+      "@enums/*": ["src/helpers/enums/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
