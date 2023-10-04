@@ -4,5 +4,5 @@ export interface IUser {
   password  : string;
   username  : string;
   family    : string;
-  createDate: Date;
+  createDate?: Date;
 }

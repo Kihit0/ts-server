@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import prisma from "@db/prisma";
-import { IUser } from "@endpoints/user/user.interface";
+import { IUser } from "@interfaces/user.interface";
 import { AppError } from "@exceptions/AppError";
 import { HttpCode } from "@enums/HttpStatusCode";
 
@@ -42,10 +42,12 @@ export class UserService {
   };
 
   public createUser = async (body: IUser) => {
-    const date: Date = new Date();
-    const user = Object.assign(body, {createDate: date});
     const createUser = await this.prisma.user.create({
-      data: user,
+      data: {
+        createDate: new Date(),
+        password: body.password || "",
+        ...body
+      },
     });
 
     if (!createUser) {

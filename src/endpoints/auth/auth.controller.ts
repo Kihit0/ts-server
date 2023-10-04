@@ -1,6 +1,6 @@
-import { JsonController, Get, Post, Body, Delete  } from "routing-controllers";
+import { JsonController, Post, Body, Delete, Param  } from "routing-controllers";
 import { AuthService } from "./auth.service";
-import { IUser } from "@endpoints/user/user.interface";
+import { IUser } from "@interfaces/user.interface";
 
 @JsonController("/auth")
 export class AuthController {
@@ -10,20 +10,20 @@ export class AuthController {
   }
 
   @Post("/login")
-  async loggin(@Body() user: any) {
-    const login = await this.AuthService.login(user);
+  async loggin(@Body() user: IUser): Promise<IUser> {
+    const login:IUser = await this.AuthService.login(user);
     return login;
   }
 
   @Post("/register")
-  async register(@Body() user: IUser) {
-    const createUser = await this.AuthService.createUser(user);
+  async register(@Body() user: IUser): Promise<IUser> {
+    const createUser: IUser = await this.AuthService.createUser(user);
     return createUser;
   }
 
-  @Get("/logout")
-  async logout() {}
-
-  @Delete("/remove")
-  async remove() {}
+  @Delete("/remove/:id")
+  async remove(@Param("id") id: number): Promise<IUser> {
+    const removeUser: IUser = await this.AuthService.remove(id);
+    return removeUser;
+  }
 }

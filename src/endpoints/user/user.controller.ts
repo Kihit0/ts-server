@@ -3,12 +3,11 @@ import {
   Param,
   Body,
   Get,
-  Post,
   Put,
   Delete,
 } from "routing-controllers";
 import { UserService } from "./user.service";
-import { IUser } from "@endpoints/user/user.interface";
+import { IUser } from "@interfaces/user.interface";
 
 @JsonController("/users")
 export class UserController {
@@ -28,12 +27,6 @@ export class UserController {
   async getOneUser(@Param("id") id: number): Promise<IUser> {
     const user = await this.userServise.getOneUser(id);
     return user;
-  }
-
-  @Post("/")
-  async createUser(@Body() user: IUser): Promise<IUser> {
-    const createUser = await this.userServise.createUser(user);
-    return createUser;
   }
 
   @Put("/:id")
