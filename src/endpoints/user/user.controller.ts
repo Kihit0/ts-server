@@ -5,9 +5,11 @@ import {
   Get,
   Put,
   Delete,
+  HttpCode,
 } from "routing-controllers";
 import { UserService } from "./user.service";
 import { IUser } from "@interfaces/user.interface";
+import { HttpCodes } from "@enums/HttpStatusCode";
 
 @JsonController("/users")
 export class UserController {
@@ -17,27 +19,51 @@ export class UserController {
     this.userServise = new UserService();
   }
 
-  @Get("/")
-  async getUser(): Promise<IUser[]> {
+  @Get("/all")
+  @HttpCode(200)
+  async getUser(): Promise<IUotput> {
     const users = await this.userServise.getAllUsers();
-    return users;
+    return {
+      code: HttpCodes.OK,
+      date: users,
+    };
   }
 
   @Get("/:id")
-  async getOneUser(@Param("id") id: number): Promise<IUser> {
+  @HttpCode(200)
+  async getOneUser(@Param("id") id: number): Promise<IUotput> {
     const user = await this.userServise.getOneUser(id);
-    return user;
+    return {
+      code: HttpCodes.OK,
+      date: user,
+    };
   }
 
-  @Put("/:id")
-  async updateUser(@Param("id") id: number, @Body() user: any): Promise<IUser> {
+  @Put("/update/:id")
+  @HttpCode(200)
+  async updateUser(
+    @Param("id") id: number,
+    @Body() user: any
+  ): Promise<IUotput> {
     const updateUser = await this.userServise.updateUser(id, user);
-    return updateUser;
+    return {
+      code: HttpCodes.OK,
+      date: updateUser,
+    };
   }
 
-  @Delete("/:id")
-  async deleteUser(@Param("id") id: number): Promise<IUser> {
+  @Delete("/remove/:id")
+  @HttpCode(204)
+  async deleteUser(@Param("id") id: number): Promise<IUotput> {
     const deleteUser = await this.userServise.deleteUser(id);
-    return deleteUser;
+    return {
+      code: HttpCodes.OK,
+      date: deleteUser,
+    };
   }
+}
+
+interface IUotput {
+  code: HttpCodes;
+  date: IUser | IUser[];
 }

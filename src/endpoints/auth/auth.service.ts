@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 import jwt, { Secret } from "jsonwebtoken";
 import prisma from "@db/prisma";
 import { AppError } from "@exceptions/AppError";
-import { HttpCode } from "@enums/HttpStatusCode";
+import { HttpCodes } from "@enums/HttpStatusCode";
 import { IUser } from "@interfaces/user.interface";
 
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
 
     if (!findUser) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "User not found",
       });
     }
@@ -36,7 +36,7 @@ export class AuthService {
 
     if (!token) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Token not valid",
       });
     }
@@ -47,7 +47,7 @@ export class AuthService {
   private isValidToken(fToken: string[], bToken: string[]): void {
     if (fToken.length !== bToken.length) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Token not valid",
       });
     }
@@ -55,7 +55,7 @@ export class AuthService {
     for (let i = 0; i < 3; i++) {
       if (fToken[i] !== bToken[i]) {
         throw new AppError({
-          httpCode: HttpCode.BAD_REQUEST,
+          httpCode: HttpCodes.BAD_REQUEST,
           description: "Token not valid",
         });
       }
@@ -70,7 +70,7 @@ export class AuthService {
 
     if (fPassword !== decryptBackPassword) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Password not valid",
       });
     }
@@ -79,7 +79,7 @@ export class AuthService {
   public async login(user: IUser): Promise<IUser> {
     if (!user.token) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Token not found",
       });
     }
@@ -98,7 +98,7 @@ export class AuthService {
   public async createUser(user: IUser): Promise<IUser> {
     if (!(user.email && user.password && user.username && user.family)) {
       throw new AppError({
-        httpCode: HttpCode.BAD_GATEWAY,
+        httpCode: HttpCodes.BAD_GATEWAY,
         description: "All input is requred",
       });
     }
@@ -109,7 +109,7 @@ export class AuthService {
 
     if (isOldUser) {
       throw new AppError({
-        httpCode: HttpCode.CONFLICT,
+        httpCode: HttpCodes.CONFLICT,
         description: "User already exit. Pleas login",
       });
     }
@@ -148,26 +148,5 @@ export class AuthService {
     const { password, ...userFront } = newUser;
 
     return Object.assign(userFront, { token });
-  }
-
-  public async remove(id: number): Promise<IUser> {
-    const user = this.prisma.user.findUnique({
-      where: { id },
-    });
-
-    if (!user) {
-      throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
-        description: "User not found",
-      });
-    }
-
-    const deleteUser = await this.prisma.user.delete({
-      where: { id },
-    });
-
-    const {password, ...dUser} = deleteUser;
-
-    return dUser;
   }
 }

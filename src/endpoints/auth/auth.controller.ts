@@ -1,6 +1,7 @@
-import { JsonController, Post, Body, Delete, Param  } from "routing-controllers";
+import { JsonController, Post, Body, HttpCode } from "routing-controllers";
 import { AuthService } from "./auth.service";
 import { IUser } from "@interfaces/user.interface";
+import { HttpCodes } from "@enums/HttpStatusCode";
 
 @JsonController("/auth")
 export class AuthController {
@@ -10,20 +11,28 @@ export class AuthController {
   }
 
   @Post("/login")
-  async loggin(@Body() user: IUser): Promise<IUser> {
+  @HttpCode(HttpCodes.OK)
+  async loggin(@Body() user: IUser): Promise<IUotput> {
     const login:IUser = await this.AuthService.login(user);
-    return login;
+    return {
+      code: HttpCodes.OK,
+      date: login
+    };
   }
 
   @Post("/register")
-  async register(@Body() user: IUser): Promise<IUser> {
+  @HttpCode(HttpCodes.CREATED)
+  async register(@Body() user: IUser): Promise<IUotput> {
     const createUser: IUser = await this.AuthService.createUser(user);
-    return createUser;
+    return {
+      code: HttpCodes.CREATED,
+      date: createUser
+    };
   }
 
-  @Delete("/remove/:id")
-  async remove(@Param("id") id: number): Promise<IUser> {
-    const removeUser: IUser = await this.AuthService.remove(id);
-    return removeUser;
-  }
+}
+
+interface IUotput{
+  code: HttpCodes,
+  date: IUser
 }

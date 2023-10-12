@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import prisma from "@db/prisma";
 import { IUser } from "@interfaces/user.interface";
 import { AppError } from "@exceptions/AppError";
-import { HttpCode } from "@enums/HttpStatusCode";
+import { HttpCodes } from "@enums/HttpStatusCode";
 
 export class UserService {
   private prisma: PrismaClient;
@@ -16,7 +16,7 @@ export class UserService {
 
     if (!users) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Error. Users not found",
       });
     }
@@ -33,7 +33,7 @@ export class UserService {
 
     if (!user) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "User not found",
       });
     }
@@ -52,7 +52,7 @@ export class UserService {
 
     if (!createUser) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Failed to create user",
       });
     }
@@ -65,7 +65,7 @@ export class UserService {
 
     if (!user) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Failed to update user",
       });
     }
@@ -83,7 +83,7 @@ export class UserService {
 
     if (!user) {
       throw new AppError({
-        httpCode: HttpCode.BAD_REQUEST,
+        httpCode: HttpCodes.BAD_REQUEST,
         description: "Failed to update user",
       });
     }
