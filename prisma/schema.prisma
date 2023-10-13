@@ -22,6 +22,12 @@ model User {
 
   //Relation fields
   tokens Token?
+
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int  @unique
+
+  books   Books @relation(fields: [booksId], references: [id])
+  booksId Int   @unique
 }
 
 model Token {
@@ -34,5 +40,65 @@ model Token {
 
   //Relation fields
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int @unique
+  userId Int  @unique
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String
+  user User?
+}
+
+model Books {
+  id             Int      @id @default(autoincrement())
+  name           String
+  isbn           String   @unique
+  release        DateTime
+  circulation    Int //тираж
+  description    String
+  numberOfPages  Int
+  ageRestriction Int
+
+  //Relation fields
+  publisher   Publisher @relation(fields: [publisherId], references: [id])
+  publisherId Int       @unique
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId Int    @unique
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int      @unique
+
+  serias   Serias @relation(fields: [seriasId], references: [id])
+  seriasId Int
+
+  User User?
+}
+
+model Publisher {
+  id    Int     @id @default(autoincrement())
+  name  String
+  books Books[]
+}
+
+model Author {
+  id        Int     @id @default(autoincrement())
+  fname     String
+  sname     String
+  lname     String
+  pseudonym String
+  Books     Books[]
+}
+
+model Category {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  books       Books?
+}
+
+model Serias {
+  id    Int     @id @default(autoincrement())
+  name  String
+  books Books[]
 }
