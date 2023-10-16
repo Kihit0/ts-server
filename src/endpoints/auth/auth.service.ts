@@ -90,6 +90,17 @@ export class AuthService {
     this.isValidToken(user.token.split("."), token.token.split("."));
     this.isValidPassword(user.password ? user.password : "", findUser);
 
+    if (new Date(token.expiration) <= new Date()) {
+      await this.prisma.token.update({
+        where: {
+          userId: findUser.id,
+        },
+        data: {
+          expiration: new Date(new Date().setDate(new Date().getDate() + 30)),
+        },
+      });
+    }
+
     const { password, ...loginUser } = findUser;
 
     return Object.assign(loginUser, { token: token.token });
@@ -111,6 +122,19 @@ export class AuthService {
       throw new AppError({
         httpCode: HttpCodes.CONFLICT,
         description: "User already exit. Pleas login",
+      });
+    }
+
+    const role = await this.prisma.role.findUnique({
+      where: {
+        id: user.roleId,
+      },
+    });
+
+    if (user.roleId !== role?.id) {
+      throw new AppError({
+        httpCode: HttpCodes.CONFLICT,
+        description: "There is no such role",
       });
     }
 

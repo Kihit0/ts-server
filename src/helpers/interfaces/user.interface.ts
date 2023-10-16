@@ -6,4 +6,5 @@ export interface IUser {
     createDate? : Date | string;
     password?   : string;
     token?      : string;
+    roleId      : number;
 }    

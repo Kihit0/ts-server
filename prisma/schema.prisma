@@ -26,8 +26,7 @@ model User {
   role   Role @relation(fields: [roleId], references: [id])
   roleId Int  @unique
 
-  books   Books @relation(fields: [booksId], references: [id])
-  booksId Int   @unique
+  books Books[]
 }
 
 model Token {
@@ -72,7 +71,8 @@ model Books {
   serias   Serias @relation(fields: [seriasId], references: [id])
   seriasId Int
 
-  User User?
+  User User @relation(fields: [userId], references: [id])
+  userId Int @unique()
 }
 
 model Publisher {
@@ -91,10 +91,10 @@ model Author {
 }
 
 model Category {
-  id          Int    @id @default(autoincrement())
-  name        String
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
   description String
-  books       Books?
+  books       Books[]
 }
 
 model Serias {

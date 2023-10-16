@@ -6,6 +6,7 @@ import {
   Put,
   Delete,
   HttpCode,
+  Authorized,
 } from "routing-controllers";
 import { UserService } from "./user.service";
 import { IUser } from "@interfaces/user.interface";
@@ -20,7 +21,7 @@ export class UserController {
   }
 
   @Get("/all")
-  @HttpCode(200)
+  @HttpCode(HttpCodes.OK)
   async getUser(): Promise<IUotput> {
     const users: IUser[] = await this.userServise.getAllUsers();
     return {
@@ -30,7 +31,7 @@ export class UserController {
   }
 
   @Get("/:id")
-  @HttpCode(200)
+  @HttpCode(HttpCodes.OK)
   async getOneUser(@Param("id") id: number): Promise<IUotput> {
     const user: IUser = await this.userServise.getOneUser(id);
     return {
@@ -39,11 +40,12 @@ export class UserController {
     };
   }
 
+  @Authorized()
   @Put("/update/:id")
-  @HttpCode(200)
+  @HttpCode(HttpCodes.OK)
   async updateUser(
     @Param("id") id: number,
-    @Body() user: any
+    @Body() user: IUser
   ): Promise<IUotput> {
     const updateUser: IUser = await this.userServise.updateUser(id, user);
     return {
@@ -52,8 +54,9 @@ export class UserController {
     };
   }
 
+  @Authorized()
   @Delete("/remove/:id")
-  @HttpCode(204)
+  @HttpCode(HttpCodes.NO_CONTENT)
   async deleteUser(@Param("id") id: number): Promise<IUotput> {
     const deleteUser: IUser = await this.userServise.deleteUser(id);
     return {

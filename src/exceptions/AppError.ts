@@ -1,15 +1,15 @@
-import { HttpCode } from "src/helpers/enums/HttpStatusCode";
+import { HttpCodes } from "src/helpers/enums/HttpStatusCode";
 
 interface AppErrorArgs {
   name?         : string;
-  httpCode      : HttpCode;
+  httpCode      : HttpCodes;
   description   : string;
   isOperation?  : boolean;
 }
 
 export class AppError extends Error {
   public readonly name: string;
-  public readonly httpCode: HttpCode;
+  public readonly httpCode: HttpCodes;
   public readonly isOperation: boolean = true;
 
   constructor(args: AppErrorArgs) {

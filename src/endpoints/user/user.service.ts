@@ -11,7 +11,7 @@ export class UserService {
     this.prisma = prisma;
   }
 
-  public getAllUsers = async () => {
+  public getAllUsers = async (): Promise<IUser[]> => {
     const users = await this.prisma.user.findMany();
 
     if (!users) {
@@ -21,10 +21,13 @@ export class UserService {
       });
     }
 
-    return users;
+    return users.map((item) => {
+      const { password, ...user } = item;
+      return user;
+    });
   };
 
-  public getOneUser = async (id: number) => {
+  public getOneUser = async (id: number): Promise<IUser> => {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -38,26 +41,9 @@ export class UserService {
       });
     }
 
-    return user;
-  };
+    const {password, ...fUser} = user;
 
-  public createUser = async (body: IUser) => {
-    const createUser = await this.prisma.user.create({
-      data: {
-        createDate: new Date(),
-        password: body.password || "",
-        ...body
-      },
-    });
-
-    if (!createUser) {
-      throw new AppError({
-        httpCode: HttpCodes.BAD_REQUEST,
-        description: "Failed to create user",
-      });
-    }
-
-    return createUser;
+    return fUser;
   };
 
   public updateUser = async (id: number, body: any) => {
@@ -75,7 +61,9 @@ export class UserService {
       data: body,
     });
 
-    return updateUser;
+    const {password, ...fUser} = updateUser;
+
+    return fUser;
   };
 
   public deleteUser = async (id: number) => {
