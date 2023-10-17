@@ -11,6 +11,8 @@ import { IToken } from "@interfaces/token.interface";
 import { IUser } from "@interfaces/user.interface";
 import { IRole } from "@interfaces/role.interface";
 import { CategoryController } from "@endpoints/category/category.controller";
+import { AppError } from "@exceptions/AppError";
+import { HttpCodes } from "@enums/HttpStatusCode";
 
 dotenv.config();
 
@@ -51,8 +53,22 @@ class App {
       authorizationChecker: async (action: Action, roles: string[]) => {
         const token = action.request.headers["authorization"];
 
-        const user = await this.getUserByToken(token);
+        if (!token) {
+          throw new AppError({
+            httpCode: HttpCodes.UNAUTHORIZED,
+            description: "User not authorized",
+          });
+        }
+
+        const user: IUser | null = await this.getUserByToken(token);
         const allRoles = await this.getRoles();
+
+        if (!user) {
+          throw new AppError({
+            httpCode: HttpCodes.BAD_REQUEST,
+            description: "User not found",
+          });
+        }
 
         if (user && !roles.length) return true;
         if (
@@ -65,10 +81,18 @@ class App {
         )
           return true;
 
-        return false;
+        throw new AppError({
+          httpCode: HttpCodes.FORBIDDEN,
+          description: "Access denied",
+        });
       },
       routePrefix: "/api",
-      controllers: [UserController, AuthController, RoleController, CategoryController],
+      controllers: [
+        UserController,
+        AuthController,
+        RoleController,
+        CategoryController,
+      ],
     }).listen(PORT);
 
     process.on("beforeExit", async () => {

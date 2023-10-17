@@ -22,7 +22,7 @@ export class UserController {
 
   @Get("/all")
   @HttpCode(HttpCodes.OK)
-  async getUser(): Promise<IUotput> {
+  async getUser(): Promise<IOutput> {
     const users: IUser[] = await this.userServise.getAllUsers();
     return {
       code: HttpCodes.OK,
@@ -32,7 +32,7 @@ export class UserController {
 
   @Get("/:id")
   @HttpCode(HttpCodes.OK)
-  async getOneUser(@Param("id") id: number): Promise<IUotput> {
+  async getOneUser(@Param("id") id: number): Promise<IOutput> {
     const user: IUser = await this.userServise.getOneUser(id);
     return {
       code: HttpCodes.OK,
@@ -46,7 +46,7 @@ export class UserController {
   async updateUser(
     @Param("id") id: number,
     @Body() user: IUser
-  ): Promise<IUotput> {
+  ): Promise<IOutput> {
     const updateUser: IUser = await this.userServise.updateUser(id, user);
     return {
       code: HttpCodes.OK,
@@ -57,7 +57,7 @@ export class UserController {
   @Authorized()
   @Delete("/remove/:id")
   @HttpCode(HttpCodes.NO_CONTENT)
-  async deleteUser(@Param("id") id: number): Promise<IUotput> {
+  async deleteUser(@Param("id") id: number): Promise<IOutput> {
     const deleteUser: IUser = await this.userServise.deleteUser(id);
     return {
       code: HttpCodes.OK,
@@ -66,7 +66,7 @@ export class UserController {
   }
 }
 
-interface IUotput {
+interface IOutput {
   code: HttpCodes;
   date: IUser | IUser[];
 }
