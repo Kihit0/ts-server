@@ -5,11 +5,9 @@ export interface IBook{
     release         : Date;
     circulation     : number;
     description     : string;
-    mumberOfPages   : number;
+    pages           : number;
     ageRestriction  : number;
 
-    publisherId     : number;
-    authorId        : number;
-    category        : number;
-    serias          : number;
+    categoryId        : number;
+    seriasId          : number;
 }

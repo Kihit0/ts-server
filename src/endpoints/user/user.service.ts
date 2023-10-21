@@ -3,12 +3,46 @@ import prisma from "@db/prisma";
 import { IUser } from "@interfaces/user.interface";
 import { AppError } from "@exceptions/AppError";
 import { HttpCodes } from "@enums/HttpStatusCode";
+import { IBook } from "@interfaces/books.interface";
 
 export class UserService {
   private prisma: PrismaClient;
 
   constructor() {
     this.prisma = prisma;
+  }
+
+  private async getBookById(
+    bookId: number[],
+    books: IBook[] | any[]
+  ): Promise<IBook[]> {
+    if (bookId.length === 0) return books;
+
+    const book: IBook | null = await this.prisma.books.findUnique({
+      where: {
+        id: bookId[bookId.length - 1],
+      },
+    });
+
+    if (book) {
+      books.push(book);
+    }
+
+    return await this.getBookById(bookId.splice(0, bookId.length - 2), books);
+  }
+
+  private async getFavoriteBooks(id: number): Promise<IBook[]> {
+    const favorite = await this.prisma.favorite.findMany({
+      where: {
+        userId: id,
+      },
+    });
+
+    const booksId: number[] = favorite.map((el) => el.bookId);
+    const books: IBook[] = new Array(booksId.length);
+    const favoriteBook: IBook[] = await this.getBookById(booksId, books);
+
+    return favoriteBook;
   }
 
   public getAllUsers = async (): Promise<IUser[]> => {
@@ -21,10 +55,17 @@ export class UserService {
       });
     }
 
-    return users.map((item) => {
+    const usersWithBook = users.map((item) => {
       const { password, ...user } = item;
       return user;
     });
+
+    for (let i = 0; i < usersWithBook.length; i++) {
+      const books = await this.getFavoriteBooks(usersWithBook[i].id);
+      Object.assign(usersWithBook[i], { favorite: books });
+    }
+
+    return usersWithBook;
   };
 
   public getOneUser = async (id: number): Promise<IUser> => {
@@ -41,7 +82,11 @@ export class UserService {
       });
     }
 
-    const {password, ...fUser} = user;
+    const { password, ...fUser } = user;
+
+    const books = await this.getFavoriteBooks(fUser.id);
+
+    Object.assign(fUser, { favorite: books });
 
     return fUser;
   };
@@ -61,7 +106,7 @@ export class UserService {
       data: body,
     });
 
-    const {password, ...fUser} = updateUser;
+    const { password, ...fUser } = updateUser;
 
     return fUser;
   };

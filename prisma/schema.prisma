@@ -55,7 +55,7 @@ model Books {
   release        DateTime
   circulation    Int //тираж
   description    String
-  numberOfPages  Int
+  pages          Int
   ageRestriction Int
 
   //Relation fields

@@ -20,6 +20,7 @@ export class UserController {
     this.userServise = new UserService();
   }
 
+  @Authorized(["admin"])
   @Get("/all")
   @HttpCode(HttpCodes.OK)
   async getUser(): Promise<IOutput> {
