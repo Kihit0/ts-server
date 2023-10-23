@@ -8,6 +8,12 @@ export interface IBook{
     pages           : number;
     ageRestriction  : number;
 
-    categoryId        : number;
-    seriasId          : number;
+    categoryId      : number;
+    seriasId        : number;
+}
+
+export interface IBookPublisher{
+    id              : number;
+    bookId          : number;
+    publisherId     : number;
 }

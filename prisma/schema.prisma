@@ -63,7 +63,7 @@ model Books {
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
 
-  serias   Serias @relation(fields: [seriasId], references: [id])
+  serias   Serias @relation(fields: [seriasId], references: [id], onDelete: Cascade)
   seriasId Int    @unique
 
   Favorite       Favorite[]
@@ -101,29 +101,29 @@ model Serias {
 
 model Favorite {
   id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
 
-  book   Books @relation(fields: [bookId], references: [id])
+  book   Books @relation(fields: [bookId], references: [id], onDelete: Cascade)
   bookId Int
 }
 
 model Book_author {
   id Int @id @default(autoincrement())
 
-  book   Books @relation(fields: [bookId], references: [id])
+  book   Books @relation(fields: [bookId], references: [id], onDelete: Cascade)
   bookId Int
 
-  author   Author @relation(fields: [authorId], references: [id])
+  author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
 }
 
 model Book_publisher {
   id Int @id @default(autoincrement())
 
-  book   Books @relation(fields: [bookId], references: [id])
+  book   Books @relation(fields: [bookId], references: [id], onDelete: Cascade)
   bookId Int
 
-  publisher   Publisher @relation(fields: [publisherId], references: [id])
+  publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   publisherId Int
 }
