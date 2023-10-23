@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import prisma from "@db/prisma";
-import { IUser } from "@interfaces/user.interface";
+import { IUser, IBook,  IFavorite} from "@interfaces/root.interface";
 import { AppError } from "@exceptions/AppError";
 import { HttpCodes } from "@enums/HttpStatusCode";
-import { IBook } from "@interfaces/books.interface";
 
 export class UserService {
   private prisma: PrismaClient;
@@ -14,7 +13,7 @@ export class UserService {
 
   private async getBookById(
     bookId: number[],
-    books: IBook[] | any[]
+    books: IBook[]
   ): Promise<IBook[]> {
     if (bookId.length === 0) return books;
 
@@ -32,7 +31,7 @@ export class UserService {
   }
 
   private async getFavoriteBooks(id: number): Promise<IBook[]> {
-    const favorite = await this.prisma.favorite.findMany({
+    const favorite: IFavorite[] = await this.prisma.favorite.findMany({
       where: {
         userId: id,
       },

@@ -1,7 +1,7 @@
 import prisma from "@db/prisma";
 import { HttpCodes } from "@enums/HttpStatusCode";
 import { AppError } from "@exceptions/AppError";
-import { IAuthor } from "@interfaces/author.interface";
+import { IAuthor } from "@interfaces/root.interface";
 import { PrismaClient } from "@prisma/client";
 
 export class AuthorService {

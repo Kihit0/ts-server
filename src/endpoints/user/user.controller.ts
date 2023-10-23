@@ -9,7 +9,7 @@ import {
   Authorized,
 } from "routing-controllers";
 import { UserService } from "./user.service";
-import { IUser } from "@interfaces/user.interface";
+import { IUser } from "@interfaces/root.interface";
 import { HttpCodes } from "@enums/HttpStatusCode";
 
 @JsonController("/users")

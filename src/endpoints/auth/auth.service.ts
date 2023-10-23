@@ -4,7 +4,7 @@ import jwt, { Secret } from "jsonwebtoken";
 import prisma from "@db/prisma";
 import { AppError } from "@exceptions/AppError";
 import { HttpCodes } from "@enums/HttpStatusCode";
-import { IUser } from "@interfaces/user.interface";
+import { IUser } from "@interfaces/root.interface";
 
 export class AuthService {
   private prisma: PrismaClient;

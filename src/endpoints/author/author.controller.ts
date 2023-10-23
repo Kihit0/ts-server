@@ -12,13 +12,17 @@ import {
 } from "routing-controllers";
 import { HttpCodes } from "@enums/HttpStatusCode";
 import { AuthorService } from "./author.service";
-import { IAuthor } from "@interfaces/author.interface";
+import { IAuthor } from "@interfaces/root.interface";
 
 @JsonController("/author")
-export class Author {
+export class AuthorController {
   private AuthorService;
   constructor() {
     this.AuthorService = new AuthorService();
+  }
+
+  public test(){
+    console.log("true")
   }
 
   @Get("/all/")

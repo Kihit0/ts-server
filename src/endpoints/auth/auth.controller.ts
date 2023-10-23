@@ -1,6 +1,6 @@
 import { JsonController, Post, Body, HttpCode } from "routing-controllers";
 import { AuthService } from "./auth.service";
-import { IUser } from "@interfaces/user.interface";
+import { IUser } from "@interfaces/root.interface";
 import { HttpCodes } from "@enums/HttpStatusCode";
 
 @JsonController("/auth")

@@ -11,7 +11,7 @@ import {
 } from "routing-controllers";
 import { CategoryService } from "./category.service";
 import { HttpCodes } from "@enums/HttpStatusCode";
-import { ICategory } from "@interfaces/category.interface";
+import { ICategory } from "@interfaces/root.interface";
 
 @JsonController("/category")
 export class CategoryController {

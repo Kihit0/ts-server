@@ -4,13 +4,14 @@ import { Action, createExpressServer } from "routing-controllers";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 import prisma from "./db/prisma";
-import { UserController } from "@endpoints/user/user.controller";
-import { AuthController } from "@endpoints/auth/auth.controller";
-import { RoleController } from "@endpoints/role/role.controller";
-import { IToken } from "@interfaces/token.interface";
-import { IUser } from "@interfaces/user.interface";
-import { IRole } from "@interfaces/role.interface";
-import { CategoryController } from "@endpoints/category/category.controller";
+import {
+  UserController,
+  AuthController,
+  AuthorController,
+  CategoryController,
+  RoleController,
+} from "@endpoints/root.controller";
+import { IUser, IToken, IRole } from "@interfaces/root.interface";
 import { AppError } from "@exceptions/AppError";
 import { HttpCodes } from "@enums/HttpStatusCode";
 
@@ -90,6 +91,7 @@ class App {
       controllers: [
         UserController,
         AuthController,
+        AuthorController,
         RoleController,
         CategoryController,
       ],

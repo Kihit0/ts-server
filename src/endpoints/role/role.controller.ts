@@ -1,6 +1,6 @@
 import { JsonController, Get, HttpCode } from "routing-controllers";
 import { RoleService } from "./role.service";
-import { IRole } from "@interfaces/role.interface";
+import { IRole } from "@interfaces/root.interface";
 import { HttpCodes } from "@enums/HttpStatusCode";
 
 @JsonController("/role")

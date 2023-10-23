@@ -1,7 +1,7 @@
 import prisma from "@db/prisma";
 import { HttpCodes } from "@enums/HttpStatusCode";
 import { AppError } from "@exceptions/AppError";
-import { IRole } from "@interfaces/role.interface";
+import { IRole } from "@interfaces/root.interface";
 import { PrismaClient } from "@prisma/client";
 
 export class RoleService {
