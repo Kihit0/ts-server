@@ -39,7 +39,7 @@
   },
   "_moduleAliases": {
     "@db": "src/db",
-    "@endpoints": "src/endpoints",
+    "@controllers": "src/controllers",
     "@interfaces": "src/helpers/interfaces",
     "@exceptions": "src/exceptions",
     "@enums": "src/helpers/enums"

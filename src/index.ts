@@ -10,7 +10,7 @@ import {
   AuthorController,
   CategoryController,
   RoleController,
-} from "@endpoints/root.controller";
+} from "@controllers/root.controller";
 import { IUser, IToken, IRole } from "@interfaces/root.interface";
 import { AppError } from "@exceptions/AppError";
 import { HttpCodes } from "@enums/HttpStatusCode";
