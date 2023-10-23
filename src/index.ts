@@ -10,6 +10,7 @@ import {
   AuthorController,
   CategoryController,
   RoleController,
+  PublisherController,
 } from "@controllers/root.controller";
 import { IUser, IToken, IRole } from "@interfaces/root.interface";
 import { AppError } from "@exceptions/AppError";
@@ -94,6 +95,7 @@ class App {
         AuthorController,
         RoleController,
         CategoryController,
+        PublisherController
       ],
     }).listen(PORT);
 
