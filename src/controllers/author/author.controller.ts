@@ -34,7 +34,7 @@ export class AuthorController {
     const author = await this.AuthorService.getAllAuthor(startIndex, maxResult);
     return {
       code: HttpCodes.OK,
-      date: author,
+      data: author,
     };
   }
 
@@ -44,7 +44,7 @@ export class AuthorController {
     const author: IAuthor = await this.AuthorService.getAuthor(id);
     return {
       code: HttpCodes.OK,
-      date: author,
+      data: author,
     };
   }
 
@@ -55,7 +55,7 @@ export class AuthorController {
     const newAuthor: IAuthor = await this.AuthorService.createAuthor(body);
     return {
       code: HttpCodes.OK,
-      date: newAuthor,
+      data: newAuthor,
     };
   }
 
@@ -72,7 +72,7 @@ export class AuthorController {
     );
     return {
       code: HttpCodes.OK,
-      date: updateAuthor,
+      data: updateAuthor,
     };
   }
 
@@ -83,12 +83,12 @@ export class AuthorController {
     const deleteAuthor: IAuthor = await this.AuthorService.deleteAuthor(id);
     return {
       code: HttpCodes.OK,
-      date: deleteAuthor,
+      data: deleteAuthor,
     };
   }
 }
 
 interface IOutput {
   code: HttpCodes;
-  date: IAuthor | IAuthor[];
+  data: IAuthor | IAuthor[];
 }

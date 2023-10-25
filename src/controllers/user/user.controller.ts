@@ -27,7 +27,7 @@ export class UserController {
     const users: IUser[] = await this.userServise.getAllUsers();
     return {
       code: HttpCodes.OK,
-      date: users,
+      data: users,
     };
   }
 
@@ -37,7 +37,7 @@ export class UserController {
     const user: IUser = await this.userServise.getOneUser(id);
     return {
       code: HttpCodes.OK,
-      date: user,
+      data: user,
     };
   }
 
@@ -51,7 +51,7 @@ export class UserController {
     const updateUser: IUser = await this.userServise.updateUser(id, user);
     return {
       code: HttpCodes.OK,
-      date: updateUser,
+      data: updateUser,
     };
   }
 
@@ -62,12 +62,12 @@ export class UserController {
     const deleteUser: IUser = await this.userServise.deleteUser(id);
     return {
       code: HttpCodes.OK,
-      date: deleteUser,
+      data: deleteUser,
     };
   }
 }
 
 interface IOutput {
   code: HttpCodes;
-  date: IUser | IUser[];
+  data: IUser | IUser[];
 }

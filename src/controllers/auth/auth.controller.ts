@@ -16,7 +16,7 @@ export class AuthController {
     const login:IUser = await this.AuthService.login(user);
     return {
       code: HttpCodes.OK,
-      date: login
+      data: login
     };
   }
 
@@ -26,7 +26,7 @@ export class AuthController {
     const createUser: IUser = await this.AuthService.createUser(user);
     return {
       code: HttpCodes.CREATED,
-      date: createUser
+      data: createUser
     };
   }
 
@@ -34,5 +34,5 @@ export class AuthController {
 
 interface IUotput{
   code: HttpCodes,
-  date: IUser
+  data: IUser
 }

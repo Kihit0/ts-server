@@ -13,10 +13,10 @@ export class RoleController {
   @Get("/all")
   @HttpCode(HttpCodes.OK)
   public async getRole() : Promise<IOutpput> {
-    const date: IRole[] = await this.RoleService.getAllRoles();
+    const data: IRole[] = await this.RoleService.getAllRoles();
     return {
       code: HttpCodes.OK,
-      date
+      data
     }
   }
 }
@@ -24,5 +24,5 @@ export class RoleController {
 
 interface IOutpput{
   code: HttpCodes,
-  date: IRole | IRole[]
+  data: IRole | IRole[]
 }

@@ -63,9 +63,9 @@ class App {
           });
         }
 
-        const date: any[] | null = await this.getUserByToken(token);
-        const user: IUser | null = date ? date[0] : null;
-        const fullToken: IToken | null = date ? date[1] : null;
+        const data: any[] | null = await this.getUserByToken(token);
+        const user: IUser | null = data ? data[0] : null;
+        const fullToken: IToken | null = data ? data[1] : null;
 
         const allRoles = await this.getRoles();
 

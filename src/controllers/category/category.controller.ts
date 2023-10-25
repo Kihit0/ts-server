@@ -27,7 +27,7 @@ export class CategoryController {
       await this.CategoryService.getAllCategory();
     return {
       code: HttpCodes.OK,
-      date: allCategory,
+      data: allCategory,
     };
   }
 
@@ -41,7 +41,7 @@ export class CategoryController {
 
     return {
       code: HttpCodes.CREATED,
-      date: newCategory,
+      data: newCategory,
     };
   }
 
@@ -59,7 +59,7 @@ export class CategoryController {
 
     return {
       code: HttpCodes.OK,
-      date: updateCategory,
+      data: updateCategory,
     };
   }
 
@@ -73,12 +73,12 @@ export class CategoryController {
 
     return {
       code: HttpCodes.NO_CONTENT,
-      date: deleteCategory,
+      data: deleteCategory,
     };
   }
 }
 
 interface IOutput {
   code: HttpCodes;
-  date: ICategory | ICategory[];
+  data: ICategory | ICategory[];
 }

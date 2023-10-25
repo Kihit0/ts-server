@@ -28,7 +28,7 @@ export class SeriasController {
 
     return {
       code: HttpCodes.OK,
-      date: allSerias,
+      data: allSerias,
     };
   }
 
@@ -38,7 +38,7 @@ export class SeriasController {
     const serias: ISerias = await this.SeriasService.getSerias(id);
     return {
       code: HttpCodes.OK,
-      date: serias,
+      data: serias,
     };
   }
 
@@ -49,7 +49,7 @@ export class SeriasController {
     const createSerisas: ISerias = await this.SeriasService.createSerias(body);
     return {
       code: HttpCodes.OK,
-      date: createSerisas,
+      data: createSerisas,
     };
   }
 
@@ -66,7 +66,7 @@ export class SeriasController {
     );
     return {
       code: HttpCodes.OK,
-      date: updateSerias,
+      data: updateSerias,
     };
   }
 
@@ -77,12 +77,12 @@ export class SeriasController {
     const deleteSerias: ISerias = await this.SeriasService.deleteSerias(id);
     return {
       code: HttpCodes.OK,
-      date: deleteSerias,
+      data: deleteSerias,
     };
   }
 }
 
 interface IOutput {
   code: HttpCodes;
-  date: ISerias | ISerias[];
+  data: ISerias | ISerias[];
 }

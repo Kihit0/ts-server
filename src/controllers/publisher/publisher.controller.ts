@@ -27,7 +27,7 @@ export class PublisherController {
       await this.PublisherService.getAllPublsiher();
     return {
       code: HttpCodes.OK,
-      date: publishers,
+      data: publishers,
     };
   }
 
@@ -37,7 +37,7 @@ export class PublisherController {
     const publisher: IPublisher = await this.PublisherService.getPublisher(id);
     return {
       code: HttpCodes.OK,
-      date: publisher,
+      data: publisher,
     };
   }
 
@@ -49,7 +49,7 @@ export class PublisherController {
       await this.PublisherService.createPublisher(body);
     return {
       code: HttpCodes.CREATED,
-      date: newPublisher,
+      data: newPublisher,
     };
   }
 
@@ -64,7 +64,7 @@ export class PublisherController {
       await this.PublisherService.updatePublisher(body, id);
     return {
       code: HttpCodes.OK,
-      date: updatePublisher,
+      data: updatePublisher,
     };
   }
 
@@ -76,12 +76,12 @@ export class PublisherController {
       await this.PublisherService.deletePublisher(id);
     return {
       code: HttpCodes.NO_CONTENT,
-      date: deletePublisher,
+      data: deletePublisher,
     };
   }
 }
 
 interface IOutput {
   code: HttpCodes;
-  date: IPublisher | IPublisher[];
+  data: IPublisher | IPublisher[];
 }
