@@ -6,6 +6,17 @@ import { IPublisher } from "./publisher.interface";
 import { IRole } from "./role.interface";
 import { IToken } from "./token.interface";
 import { IUser } from "./user.interface";
+import { ISerias } from "./serias.inteface";
 
-
-export {IUser, IAuthor, IBook, ICategory, IRole, IFavorite, IToken, IPublisher, IBookPublisher}
+export {
+  IUser,
+  IAuthor,
+  IBook,
+  ICategory,
+  IRole,
+  IFavorite,
+  IToken,
+  IPublisher,
+  IBookPublisher,
+  ISerias
+};

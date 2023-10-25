@@ -75,7 +75,7 @@ model Books {
 
 model Publisher {
   id    Int     @id @default(autoincrement())
-  name  String
+  name  String  @unique
   Books Books[]
 }
 
@@ -97,7 +97,7 @@ model Category {
 
 model Serias {
   id    Int     @id @default(autoincrement())
-  name  String
+  name  String  @unique
   books Books[]
 }
 

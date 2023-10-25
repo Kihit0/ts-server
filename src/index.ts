@@ -11,6 +11,7 @@ import {
   CategoryController,
   RoleController,
   PublisherController,
+  SeriasController,
 } from "@controllers/root.controller";
 import { IUser, IToken, IRole } from "@interfaces/root.interface";
 import { AppError } from "@exceptions/AppError";
@@ -26,7 +27,7 @@ class App {
     this.prisma = prisma;
   }
 
-  private async getUserByToken(token: string): Promise<IUser | null> {
+  private async getUserByToken(token: string): Promise<any[] | null> {
     const bToken: IToken | null = await this.prisma.token.findFirst({
       where: {
         token: token,
@@ -43,7 +44,7 @@ class App {
       },
     });
 
-    return user;
+    return [user, bToken];
   }
 
   private async getRoles(): Promise<IRole[]> {
@@ -62,13 +63,30 @@ class App {
           });
         }
 
-        const user: IUser | null = await this.getUserByToken(token);
+        const date: any[] | null = await this.getUserByToken(token);
+        const user: IUser | null = date ? date[0] : null;
+        const fullToken: IToken | null = date ? date[1] : null;
+
         const allRoles = await this.getRoles();
 
         if (!user) {
           throw new AppError({
             httpCode: HttpCodes.BAD_REQUEST,
             description: "User not found",
+          });
+        }
+
+        if (user && fullToken && new Date(fullToken.expiration) <= new Date()) {
+          await this.prisma.token.update({
+            where: {
+              userId: user.id,
+            },
+            data: {
+              updateAt: new Date(),
+              expiration: new Date(
+                new Date().setDate(new Date().getDate() + 30)
+              ),
+            },
           });
         }
 
@@ -95,7 +113,8 @@ class App {
         AuthorController,
         RoleController,
         CategoryController,
-        PublisherController
+        PublisherController,
+        SeriasController,
       ],
     }).listen(PORT);
 

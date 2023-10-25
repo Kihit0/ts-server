@@ -77,17 +77,10 @@ export class AuthService {
   }
 
   public async login(user: IUser): Promise<IUser> {
-    if (!user.token) {
-      throw new AppError({
-        httpCode: HttpCodes.BAD_REQUEST,
-        description: "Token not found",
-      });
-    }
 
     const findUser = await this.getUser(user);
     const token = await this.getToken(findUser.id);
 
-    this.isValidToken(user.token.split("."), token.token.split("."));
     this.isValidPassword(user.password ? user.password : "", findUser);
 
     if (new Date(token.expiration) <= new Date()) {
@@ -96,6 +89,7 @@ export class AuthService {
           userId: findUser.id,
         },
         data: {
+          updateAt: new Date(),
           expiration: new Date(new Date().setDate(new Date().getDate() + 30)),
         },
       });
