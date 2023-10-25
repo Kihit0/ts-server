@@ -66,15 +66,17 @@ model Books {
   serias   Serias @relation(fields: [seriasId], references: [id], onDelete: Cascade)
   seriasId Int    @unique
 
-  Favorite       Favorite[]
-  Book_author    Book_author[]
-  Book_publisher Book_publisher[]
+  publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
+  publisherId Int
+
+  Favorite    Favorite[]
+  Book_author Book_author[]
 }
 
 model Publisher {
-  id             Int              @id @default(autoincrement())
-  name           String
-  Book_publisher Book_publisher[]
+  id    Int     @id @default(autoincrement())
+  name  String
+  Books Books[]
 }
 
 model Author {
@@ -116,14 +118,6 @@ model Book_author {
 
   author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
-}
 
-model Book_publisher {
-  id Int @id @default(autoincrement())
-
-  book   Books @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  bookId Int
-
-  publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
-  publisherId Int
+  subauthor Int[]
 }
