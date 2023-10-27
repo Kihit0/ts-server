@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import {
-  IAuthor,
   IBook,
   ICategory,
+  IPublisher,
+  ISerias,
 } from "@interfaces/root.interface";
 import prisma from "@db/prisma";
 import { AppError } from "@exceptions/AppError";
@@ -42,11 +43,10 @@ export class BookService {
       })
     );
 
-
     return authors;
   }
 
-  private async getCategory(bookId: number): Promise<string[]> {
+  private async getCategory(bookId: number): Promise<ICategory[]> {
     interface IBookCategory {
       id: number;
       bookId: number;
@@ -64,7 +64,8 @@ export class BookService {
     }
 
     const frontCategory: ICategory[] = new Array();
-    for (let i = 0; i <= categoryArray.length; i++) {
+
+    for (let i = 0; i < categoryArray.length; i++) {
       const category: ICategory | null = await this.prisma.category.findUnique({
         where: {
           id: categoryArray[i].categoryId,
@@ -73,27 +74,62 @@ export class BookService {
       category && frontCategory.push(category);
     }
 
-    return frontCategory.map((cat) => cat.name);
+    return frontCategory;
+  }
+
+  private async getPublisher(publisherId: number): Promise<IPublisher | null> {
+    return await this.prisma.publisher.findUnique({
+      where: {
+        id: publisherId,
+      },
+    });
+  }
+
+  private async getSerias(seriasId: number): Promise<ISerias | null> {
+    return await this.prisma.serias.findUnique({
+      where: {
+        id: seriasId,
+      },
+    });
   }
 
   private async getBookWithCategoryAndAuthor(
-    book: IBook[] | IBook
+    book: any
   ): Promise<any> {
-    if (Array.isArray(book)) {
-      for (let i = 0; i <= book.length; i++) {
+    if (Array.isArray(book) && book.length !== 0) {
+      for (let i = 0; i < book.length; i++) {
         const author: object[] = await this.getAuthor(book[i].id);
-        const category: string[] = await this.getCategory(book[i].id);
+        const category: ICategory[] = await this.getCategory(book[i].id);
+        const publisher: IPublisher | null = await this.getPublisher(
+          book[i].publisherId
+        );
+        const serias: ISerias | null = await this.getSerias(
+          book[i].seriasId
+        );
 
-        Object.assign(book[i], { category, author });
+        const {publisherId, seriasId, ...rest} = book[i];
+
+        Object.assign(rest, { category, author, publisher, serias });
+        book[i] = rest
       }
       return book;
-    } else {
+    } else if (!Array.isArray(book)) {
       const author: object[] = await this.getAuthor(book.id);
-      const category: string[] = await this.getCategory(book.id);
+      const category: ICategory[] = await this.getCategory(book.id);
+      const publisher: IPublisher | null = await this.getPublisher(
+        book.publisherId
+      );
+      const serias: ISerias | null = await this.getSerias(
+        book.seriasId
+      );
 
-      Object.assign(book, { category, author });
-      return book;
+      Object.assign(book, { category, author, publisher, serias });
+      const {publisherId, seriasId, ...rest} = book;
+
+      return rest;
     }
+
+    return [];
   }
 
   public async getAllBook(
@@ -165,18 +201,11 @@ export class BookService {
     return newBookWithCategoryAndAuthor;
   }
 
-  public async getBookByCategory(
+  private async getBookByCategory(
     categoryId: number,
     maxResult?: number,
     startIndex?: number
   ): Promise<IBook[]> {
-    if (maxResult && maxResult > 60) {
-      throw new AppError({
-        httpCode: HttpCodes.BAD_REQUEST,
-        description: "Max result not to exceed 60",
-      });
-    }
-
     const bookCategory = await this.prisma.book_category.findMany({
       where: {
         id: categoryId,
@@ -202,21 +231,17 @@ export class BookService {
       );
     }
 
-    return books;
+    const newBookWithCategoryAndAuthor: IBook[] =
+      await this.getBookWithCategoryAndAuthor(books);
+
+    return newBookWithCategoryAndAuthor;
   }
 
-  public async getBookBySerias(
+  private async getBookBySerias(
     seriasId: number,
     maxResult?: number,
     startIndex?: number
   ): Promise<IBook[]> {
-    if (maxResult && maxResult > 60) {
-      throw new AppError({
-        httpCode: HttpCodes.BAD_REQUEST,
-        description: "Max result not to exceed 60",
-      });
-    }
-
     const books: IBook[] = await this.prisma.books.findMany({
       where: {
         seriasId: seriasId,
@@ -225,21 +250,17 @@ export class BookService {
       skip: startIndex,
     });
 
-    return books;
+    const newBookWithCategoryAndAuthor: IBook[] =
+      await this.getBookWithCategoryAndAuthor(books);
+
+    return newBookWithCategoryAndAuthor;
   }
 
-  public async getBookByPublisher(
+  private async getBookByPublisher(
     publisherId: number,
     maxResult?: number,
     startIndex?: number
   ): Promise<IBook[]> {
-    if (maxResult && maxResult > 60) {
-      throw new AppError({
-        httpCode: HttpCodes.BAD_REQUEST,
-        description: "Max result not to exceed 60",
-      });
-    }
-
     const books = await this.prisma.books.findMany({
       where: {
         publisherId: publisherId,
@@ -248,49 +269,71 @@ export class BookService {
       skip: startIndex,
     });
 
-    return books;
+    const newBookWithCategoryAndAuthor: IBook[] =
+      await this.getBookWithCategoryAndAuthor(books);
+
+    return newBookWithCategoryAndAuthor;
   }
 
-  public async getBookBySearch(
-    name?: string,
-    author?: string
-  ): Promise<IBook[]> {
-    const books = new Array();
-    const authors: IAuthor[] | undefined | null | "" =
-      author &&
-      (await this.prisma.author.findMany({
-        where: {
-          fname: author,
-        },
-      }));
-
-    const bookSearchByName = await this.prisma.books.findMany({
-      where: {
-        name: name,
-      },
-    });
-
-    if (!authors && bookSearchByName.length === 0) {
+  public async getBookBySearch(payload: IPayload): Promise<IBook[]> {
+    if (payload.maxResult && payload.maxResult > 60) {
       throw new AppError({
         httpCode: HttpCodes.BAD_REQUEST,
-        description: "Books not found",
+        description: "Max result not to exceed 60",
       });
     }
 
-    if (Array.isArray(authors)) {
-      const booksAuthor = new Array();
-      for (let i = 0; i < authors.length; i++) {
-        booksAuthor.push(
-          await this.prisma.book_author.findMany({
-            where: {
-              authorId: authors[i].id,
-            },
-          })
-        );
-      }
-
-      const book = new Array(booksAuthor.length);
-      
+    if (payload && payload.book && payload.book.length <= 1) {
+      throw new AppError({
+        httpCode: HttpCodes.BAD_REQUEST,
+        description: "Small search bar",
+      });
     }
+
+    if (payload.serias) {
+      return this.getBookBySerias(
+        payload.serias,
+        payload.maxResult,
+        payload.startIndex
+      );
+    }
+
+    if (payload.category) {
+      return this.getBookByCategory(
+        payload.category,
+        payload.maxResult,
+        payload.startIndex
+      );
+    }
+
+    if (payload.publisher) {
+      return this.getBookByPublisher(
+        payload.publisher,
+        payload.maxResult,
+        payload.startIndex
+      );
+    }
+
+    const books: IBook[] = await this.prisma.books.findMany({
+      where: {
+        name: payload.book,
+      },
+      take: payload.maxResult ? payload.maxResult : 30,
+      skip: payload.startIndex,
+    });
+
+    const newBookWithCategoryAndAuthor: IBook[] =
+      await this.getBookWithCategoryAndAuthor(books);
+
+    return newBookWithCategoryAndAuthor;
   }
+}
+
+interface IPayload {
+  book?: string;
+  serias?: number;
+  category?: number;
+  publisher?: number;
+  maxResult?: number;
+  startIndex?: number;
 }

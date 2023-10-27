@@ -12,6 +12,7 @@ import {
   RoleController,
   PublisherController,
   SeriasController,
+  BookController,
 } from "@controllers/root.controller";
 import { IUser, IToken, IRole } from "@interfaces/root.interface";
 import { AppError } from "@exceptions/AppError";
@@ -115,6 +116,7 @@ class App {
         CategoryController,
         PublisherController,
         SeriasController,
+        BookController
       ],
     }).listen(PORT);
 

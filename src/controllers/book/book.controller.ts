@@ -21,45 +21,65 @@ export class BookController {
     this.BookService = new BookService();
   }
 
-  @Get("/all/")
+  @Get("/all")
   @HttpCode(HttpCodes.OK)
   public async getAllBook(
     @QueryParam("startIndex") startIndex: number | undefined,
     @QueryParam("maxResult") maxResult: number | undefined
-  ): Promise<any> {
+  ): Promise<IOutput> {
+    const books: IBook[] = await this.BookService.getAllBook(
+      startIndex,
+      maxResult
+    );
     return {
       code: HttpCodes.OK,
-      data: {},
+      data: books,
     };
   }
 
   @Get("/:id")
   @HttpCode(HttpCodes.OK)
-  public async getBookById(@Param("id") id: number) {
+  public async getBookById(@Param("id") id: number): Promise<IOutput> {
+    const book: IBook = await this.BookService.getBookById(id);
     return {
       code: HttpCodes.OK,
-      data: {},
+      data: book,
     };
   }
 
   @Get("/search/isbn/:isbn")
   @HttpCode(HttpCodes.OK)
-  public async getBookByISBN(@Param("isbn") isbn: string): Promise<any> {
+  public async getBookByISBN(@Param("isbn") isbn: string): Promise<IOutput> {
+    const book: IBook = await this.BookService.getBookByISNB(isbn);
     return {
       code: HttpCodes.OK,
-      data: {},
+      data: book,
     };
   }
 
-  @Get("/search/?")
+  @Get("/search")
   @HttpCode(HttpCodes.OK)
   public async getBookBySearch(
-    @QueryParam("name") name?: string,
-    @QueryParam("author") author?: string,
-  ): Promise<any> {
+    @QueryParam("book") book: string,
+    @QueryParam("serias") serias: number,
+    @QueryParam("category") category: number,
+    @QueryParam("publisher") publisher: number,
+    @QueryParam("maxResult") maxResult: number,
+    @QueryParam("startIndex") startIndex: number
+  ): Promise<IOutput> {
+    const payload = {
+      book,
+      serias,
+      category,
+      publisher,
+      maxResult,
+      startIndex,
+    };
+
+    const books: IBook[] = await this.BookService.getBookBySearch(payload)
     return {
       code: HttpCodes.OK,
-      data: {},
+      data: books,
     };
   }
 
@@ -95,4 +115,9 @@ export class BookController {
       data: {},
     };
   }
+}
+
+interface IOutput {
+  code: HttpCodes;
+  data: IBook | IBook[];
 }
