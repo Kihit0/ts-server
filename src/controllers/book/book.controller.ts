@@ -15,7 +15,7 @@ import { IBook } from "@interfaces/root.interface";
 import { BookService } from "./book.service";
 
 @JsonController("/book")
-export class Book {
+export class BookController {
   private readonly BookService;
   constructor() {
     this.BookService = new BookService();
@@ -56,9 +56,6 @@ export class Book {
   public async getBookBySearch(
     @QueryParam("name") name?: string,
     @QueryParam("author") author?: string,
-    @QueryParam("serias") serias?: string,
-    @QueryParam("publisher") publisher?: string,
-    @QueryParam("category") category?: string
   ): Promise<any> {
     return {
       code: HttpCodes.OK,

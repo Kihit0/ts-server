@@ -44,24 +44,6 @@ export class AuthService {
     return token;
   }
 
-  private isValidToken(fToken: string[], bToken: string[]): void {
-    if (fToken.length !== bToken.length) {
-      throw new AppError({
-        httpCode: HttpCodes.BAD_REQUEST,
-        description: "Token not valid",
-      });
-    }
-
-    for (let i = 0; i < 3; i++) {
-      if (fToken[i] !== bToken[i]) {
-        throw new AppError({
-          httpCode: HttpCodes.BAD_REQUEST,
-          description: "Token not valid",
-        });
-      }
-    }
-  }
-
   private isValidPassword(fPassword: string, bUser: IUser): void {
     const decryptBackPassword = CryptoJS.AES.decrypt(
       bUser.password ? bUser.password : "",

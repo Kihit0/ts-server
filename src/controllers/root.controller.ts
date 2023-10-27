@@ -5,6 +5,7 @@ import { RoleController } from "./role/role.controller";
 import { UserController } from "./user/user.controller";
 import { PublisherController } from "./publisher/publisher.controller";
 import { SeriasController } from "./serias/serias.controller";
+import { BookController } from "./book/book.controller";
 
 export {
   AuthController,
@@ -14,4 +15,5 @@ export {
   UserController,
   PublisherController,
   SeriasController,
+  BookController
 };

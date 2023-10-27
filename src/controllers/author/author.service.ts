@@ -52,7 +52,7 @@ export class AuthorService {
   }
 
   public async createAuthor(body: IAuthor): Promise<IAuthor> {
-    if (!body.fname && !body.sname)
+    if (!body.fname)
       this.showError(HttpCodes.BAD_REQUEST, "Data not filled in");
 
     const newAuthor: IAuthor | null = await this.prisma.author.create({
