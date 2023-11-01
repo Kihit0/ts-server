@@ -6,6 +6,7 @@ import { UserController } from "./user/user.controller";
 import { PublisherController } from "./publisher/publisher.controller";
 import { SeriasController } from "./serias/serias.controller";
 import { BookController } from "./book/book.controller";
+import { SearchController} from "./book/search.controller"
 
 export {
   AuthController,
@@ -15,5 +16,6 @@ export {
   UserController,
   PublisherController,
   SeriasController,
-  BookController
+  BookController,
+  SearchController
 };

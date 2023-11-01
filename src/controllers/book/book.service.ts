@@ -93,9 +93,7 @@ export class BookService {
     });
   }
 
-  private async getBookWithCategoryAndAuthor(
-    book: any
-  ): Promise<any> {
+  private async getBookWithCategoryAndAuthor(book: any): Promise<any> {
     if (Array.isArray(book) && book.length !== 0) {
       for (let i = 0; i < book.length; i++) {
         const author: object[] = await this.getAuthor(book[i].id);
@@ -103,14 +101,12 @@ export class BookService {
         const publisher: IPublisher | null = await this.getPublisher(
           book[i].publisherId
         );
-        const serias: ISerias | null = await this.getSerias(
-          book[i].seriasId
-        );
+        const serias: ISerias | null = await this.getSerias(book[i].seriasId);
 
-        const {publisherId, seriasId, ...rest} = book[i];
+        const { publisherId, seriasId, ...rest } = book[i];
 
         Object.assign(rest, { category, author, publisher, serias });
-        book[i] = rest
+        book[i] = rest;
       }
       return book;
     } else if (!Array.isArray(book)) {
@@ -119,12 +115,10 @@ export class BookService {
       const publisher: IPublisher | null = await this.getPublisher(
         book.publisherId
       );
-      const serias: ISerias | null = await this.getSerias(
-        book.seriasId
-      );
+      const serias: ISerias | null = await this.getSerias(book.seriasId);
 
       Object.assign(book, { category, author, publisher, serias });
-      const {publisherId, seriasId, ...rest} = book;
+      const { publisherId, seriasId, ...rest } = book;
 
       return rest;
     }
@@ -316,7 +310,9 @@ export class BookService {
 
     const books: IBook[] = await this.prisma.books.findMany({
       where: {
-        name: payload.book,
+        name: {
+          contains: payload.book
+        },
       },
       take: payload.maxResult ? payload.maxResult : 30,
       skip: payload.startIndex,

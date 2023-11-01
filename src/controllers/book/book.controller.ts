@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {
   JsonController,
   Get,
@@ -9,6 +10,7 @@ import {
   Body,
   Authorized,
   QueryParam,
+  QueryParams,
 } from "routing-controllers";
 import { HttpCodes } from "@enums/HttpStatusCode";
 import { IBook } from "@interfaces/root.interface";
@@ -54,32 +56,6 @@ export class BookController {
     return {
       code: HttpCodes.OK,
       data: book,
-    };
-  }
-
-  @Get("/search")
-  @HttpCode(HttpCodes.OK)
-  public async getBookBySearch(
-    @QueryParam("book") book: string,
-    @QueryParam("serias") serias: number,
-    @QueryParam("category") category: number,
-    @QueryParam("publisher") publisher: number,
-    @QueryParam("maxResult") maxResult: number,
-    @QueryParam("startIndex") startIndex: number
-  ): Promise<IOutput> {
-    const payload = {
-      book,
-      serias,
-      category,
-      publisher,
-      maxResult,
-      startIndex,
-    };
-
-    const books: IBook[] = await this.BookService.getBookBySearch(payload)
-    return {
-      code: HttpCodes.OK,
-      data: books,
     };
   }
 
