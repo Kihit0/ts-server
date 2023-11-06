@@ -21,11 +21,7 @@ export class AuthorController {
     this.AuthorService = new AuthorService();
   }
 
-  public test(){
-    console.log("true")
-  }
-
-  @Get("/all/")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   public async getAllAuthor(
     @QueryParam("startIndex") startIndex: number | undefined,
@@ -49,7 +45,7 @@ export class AuthorController {
   }
 
   @Authorized(["admin", "manager"])
-  @Post("/create")
+  @Post("")
   @HttpCode(HttpCodes.CREATED)
   public async createAuthor(@Body() body: IAuthor): Promise<IOutput> {
     const newAuthor: IAuthor = await this.AuthorService.createAuthor(body);
@@ -60,7 +56,7 @@ export class AuthorController {
   }
 
   @Authorized(["admin", "manager"])
-  @Put("/update/:id")
+  @Put("/:id")
   @HttpCode(HttpCodes.OK)
   public async updateAuthor(
     @Param("id") id: number,
@@ -77,7 +73,7 @@ export class AuthorController {
   }
 
   @Authorized(["admin", "manager"])
-  @Delete("/remove/:id")
+  @Delete("/:id")
   @HttpCode(HttpCodes.NO_CONTENT)
   public async deleteAuthor(@Param("id") id: number): Promise<IOutput> {
     const deleteAuthor: IAuthor = await this.AuthorService.deleteAuthor(id);

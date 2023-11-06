@@ -10,7 +10,7 @@ export class RoleController {
     this.RoleService = new RoleService();
   }
 
-  @Get("/all")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   public async getRole() : Promise<IOutpput> {
     const data: IRole[] = await this.RoleService.getAllRoles();

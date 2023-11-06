@@ -10,7 +10,6 @@ import {
   Body,
   Authorized,
   QueryParam,
-  QueryParams,
 } from "routing-controllers";
 import { HttpCodes } from "@enums/HttpStatusCode";
 import { IBook } from "@interfaces/root.interface";
@@ -23,7 +22,7 @@ export class BookController {
     this.BookService = new BookService();
   }
 
-  @Get("/all")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   public async getAllBook(
     @QueryParam("startIndex") startIndex: number | undefined,
@@ -49,7 +48,7 @@ export class BookController {
     };
   }
 
-  @Get("/search/isbn/:isbn")
+  @Get("/:isbn")
   @HttpCode(HttpCodes.OK)
   public async getBookByISBN(@Param("isbn") isbn: string): Promise<IOutput> {
     const book: IBook = await this.BookService.getBookByISNB(isbn);
@@ -60,7 +59,7 @@ export class BookController {
   }
 
   @Authorized(["admin", "manager"])
-  @Post("/create")
+  @Post("")
   @HttpCode(HttpCodes.CREATED)
   public async createBook(@Body() body: IBook): Promise<any> {
     return {
@@ -70,7 +69,7 @@ export class BookController {
   }
 
   @Authorized(["admin", "manager"])
-  @Put("/update/:id")
+  @Put("/:id")
   @HttpCode(HttpCodes.OK)
   public async updateBook(
     @Param("id") id: number,
@@ -83,7 +82,7 @@ export class BookController {
   }
 
   @Authorized(["admin", "manager"])
-  @Delete("/remove/:id")
+  @Delete("/:id")
   @HttpCode(HttpCodes.NO_CONTENT)
   public async deleteBook(@Param("id") id: number): Promise<any> {
     return {

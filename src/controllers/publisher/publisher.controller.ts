@@ -20,7 +20,7 @@ export class PublisherController {
     this.PublisherService = new PublisherService();
   }
 
-  @Get("/all")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   public async getAllPublsher(): Promise<IOutput> {
     const publishers: IPublisher[] =
@@ -42,7 +42,7 @@ export class PublisherController {
   }
 
   @Authorized(["admin", "manager"])
-  @Post("/create")
+  @Post("")
   @HttpCode(HttpCodes.CREATED)
   public async createPublisher(@Body() body: IPublisher): Promise<IOutput> {
     const newPublisher: IPublisher =
@@ -69,7 +69,7 @@ export class PublisherController {
   }
 
   @Authorized(["admin", "manager"])
-  @Delete("/remove/:id")
+  @Delete("/:id")
   @HttpCode(HttpCodes.NO_CONTENT)
   public async deletePublisher(@Param("id") id: number): Promise<IOutput> {
     const deletePublisher: IPublisher =

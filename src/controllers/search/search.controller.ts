@@ -7,16 +7,16 @@ import {
 } from "routing-controllers";
 import { HttpCodes } from "@enums/HttpStatusCode";
 import { IBook } from "@interfaces/root.interface";
-import { BookService } from "./book.service";
+import { SearchService } from "./search.service";
 
 @JsonController("/search")
 export class SearchController {
-  private readonly BookService;
+  private readonly SearchService;
   constructor() {
-    this.BookService = new BookService();
+    this.SearchService = new SearchService();
   }
 
-  @Get("/")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   public async getBookBySearch(
     @QueryParam("book") book?: string,
@@ -35,7 +35,7 @@ export class SearchController {
       startIndex,
     };
 
-    const books: IBook[] = await this.BookService.getBookBySearch(payload)
+    const books: IBook[] = await this.SearchService.getSearch(payload)
     return {
       code: HttpCodes.OK,
       data: books,

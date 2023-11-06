@@ -21,7 +21,7 @@ export class SeriasController {
     this.SeriasService = new SeriasService();
   }
 
-  @Get("/all")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   public async getAllSerias(): Promise<IOutput> {
     const allSerias: ISerias[] = await this.SeriasService.getAllSerias();
@@ -43,7 +43,7 @@ export class SeriasController {
   }
 
   @Authorized(["admin", "manager"])
-  @Post("/create")
+  @Post("")
   @HttpCode(HttpCodes.OK)
   public async createSerisas(@Body() body: ISerias): Promise<IOutput> {
     const createSerisas: ISerias = await this.SeriasService.createSerias(body);
@@ -54,7 +54,7 @@ export class SeriasController {
   }
 
   @Authorized(["admin", "manager"])
-  @Put("/update/:id")
+  @Put("/:id")
   @HttpCode(HttpCodes.OK)
   public async updateSerias(
     @Param("id") id: number,
@@ -71,7 +71,7 @@ export class SeriasController {
   }
 
   @Authorized(["admin", "manager"])
-  @Delete("/remove/:id")
+  @Delete("/:id")
   @HttpCode(HttpCodes.OK)
   public async deleteSerias(@Param("id") id: number): Promise<IOutput> {
     const deleteSerias: ISerias = await this.SeriasService.deleteSerias(id);

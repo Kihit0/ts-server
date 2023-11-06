@@ -20,7 +20,7 @@ export class CategoryController {
     this.CategoryService = new CategoryService();
   }
 
-  @Get("/all")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   public async getAllCategory(): Promise<IOutput> {
     const allCategory: ICategory[] =
@@ -32,7 +32,7 @@ export class CategoryController {
   }
 
   @Authorized(["admin", "manager"])
-  @Post("/create")
+  @Post("")
   @HttpCode(HttpCodes.CREATED)
   public async createCategory(@Body() body: ICategory): Promise<IOutput> {
     const newCategory: ICategory = await this.CategoryService.createCategory(
@@ -46,7 +46,7 @@ export class CategoryController {
   }
 
   @Authorized(["admin", "manager"])
-  @Put("/update/:id")
+  @Put("/:id")
   @HttpCode(HttpCodes.OK)
   public async updateCategory(
     @Param("id") id: number,
@@ -64,7 +64,7 @@ export class CategoryController {
   }
 
   @Authorized(["admin", "manager"])
-  @Delete("/remove/:id")
+  @Delete("/:id")
   @HttpCode(HttpCodes.NO_CONTENT)
   public async deleteCategory(@Param("id") id: number): Promise<IOutput> {
     const deleteCategory: ICategory = await this.CategoryService.deleteCaregory(

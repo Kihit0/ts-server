@@ -14,17 +14,17 @@ import { HttpCodes } from "@enums/HttpStatusCode";
 
 @JsonController("/users")
 export class UserController {
-  private userServise;
+  private userService;
 
   constructor() {
-    this.userServise = new UserService();
+    this.userService = new UserService();
   }
 
   @Authorized(["admin"])
-  @Get("/all")
+  @Get("")
   @HttpCode(HttpCodes.OK)
   async getUser(): Promise<IOutput> {
-    const users: IUser[] = await this.userServise.getAllUsers();
+    const users: IUser[] = await this.userService.getAllUsers();
     return {
       code: HttpCodes.OK,
       data: users,
@@ -34,7 +34,7 @@ export class UserController {
   @Get("/:id")
   @HttpCode(HttpCodes.OK)
   async getOneUser(@Param("id") id: number): Promise<IOutput> {
-    const user: IUser = await this.userServise.getOneUser(id);
+    const user: IUser = await this.userService.getOneUser(id);
     return {
       code: HttpCodes.OK,
       data: user,
@@ -42,13 +42,13 @@ export class UserController {
   }
 
   @Authorized()
-  @Put("/update/:id")
+  @Put("/:id")
   @HttpCode(HttpCodes.OK)
   async updateUser(
     @Param("id") id: number,
     @Body() user: IUser
   ): Promise<IOutput> {
-    const updateUser: IUser = await this.userServise.updateUser(id, user);
+    const updateUser: IUser = await this.userService.updateUser(id, user);
     return {
       code: HttpCodes.OK,
       data: updateUser,
@@ -56,10 +56,10 @@ export class UserController {
   }
 
   @Authorized()
-  @Delete("/remove/:id")
+  @Delete("/:id")
   @HttpCode(HttpCodes.NO_CONTENT)
   async deleteUser(@Param("id") id: number): Promise<IOutput> {
-    const deleteUser: IUser = await this.userServise.deleteUser(id);
+    const deleteUser: IUser = await this.userService.deleteUser(id);
     return {
       code: HttpCodes.OK,
       data: deleteUser,
