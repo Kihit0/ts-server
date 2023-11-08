@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import {
+  IAuthor,
   IBook,
   ICategory,
   IPublisher,
@@ -268,4 +269,181 @@ export class BookService {
 
     return newBookWithCategoryAndAuthor;
   }
+
+  public async createBook(body: IFrontBook): Promise<IBook> {
+    if (!body.publisherId || !body.seriasId) {
+      throw new AppError({
+        httpCode: HttpCodes.BAD_REQUEST,
+        description: "There's not enough data",
+      });
+    }
+
+    if (Array.isArray(body.categoryId) && body.categoryId.length === 0) {
+      throw new AppError({
+        httpCode: HttpCodes.BAD_REQUEST,
+        description: "The book must contain at least 1 category",
+      });
+    } else if (body.categoryId.length > 0) {
+      const catId = body.categoryId;
+      let isCat = true;
+      for (let id = 0; id < catId.length; id++) {
+        const cat: ICategory | null = await this.prisma.category.findUnique({
+          where: {
+            id: catId[id],
+          },
+        });
+
+        if (!cat) {
+          isCat = false;
+        }
+      }
+
+      if (!isCat) {
+        throw new AppError({
+          httpCode: HttpCodes.BAD_REQUEST,
+          description: "There is no such a category",
+        });
+      }
+    }
+
+    const { author, categoryId, ...rest } = body;
+
+    const presentAuthor: IAuthor | null = await this.prisma.author.findUnique({
+      where: {
+        id: author.id,
+      },
+    });
+
+    const newAuthor: IAuthor | false =
+      !presentAuthor &&
+      (await this.prisma.author.create({
+        data: author,
+      }));
+
+    const newBook: IBook = await this.prisma.books.create({
+      data: {
+        ...rest,
+        release: new Date(rest.release),
+      },
+    });
+
+    const authorId = presentAuthor
+      ? presentAuthor.id
+      : newAuthor
+      ? newAuthor.id
+      : 0;
+
+    await this.prisma.book_author.create({
+      data: {
+        bookId: newBook.id,
+        authorId,
+      },
+    });
+
+    for (let i = 0; i < categoryId.length; i++) {
+      await this.prisma.book_category.create({
+        data: {
+          bookId: newBook.id,
+          categoryId: categoryId[i],
+        },
+      });
+    }
+
+    const newBookWithCategoryAndAuthor: IBook =
+      await this.getBookWithCategoryAndAuthor(newBook);
+
+    return newBookWithCategoryAndAuthor;
+  }
+
+  public async updateBook(id: number, body: IFrontBook): Promise<IBook> {
+    const isOldBook: IBook | null = await this.prisma.books.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!isOldBook) {
+      throw new AppError({
+        httpCode: HttpCodes.BAD_REQUEST,
+        description: "Such a book doesn't exist",
+      });
+    }
+
+    const { author, categoryId, ...rest } = body;
+
+    const bookAuthor = await this.prisma.book_author.findFirst({
+      where: {
+        bookId: id,
+      },
+    });
+
+    await this.prisma.book_author.update({
+      where: {
+        id: bookAuthor?.id,
+        bookId: id,
+      },
+      data: {
+        authorId: author.id,
+      },
+    });
+
+    for (let cat = 0; cat < categoryId.length; cat++) {
+      const bookCat = await this.prisma.book_category.findFirst({
+        where: {
+          bookId: id,
+          categoryId: categoryId[cat],
+        },
+      });
+
+      await this.prisma.book_category.update({
+        where: {
+          id: bookCat?.id,
+          bookId: isOldBook.id,
+        },
+        data: {
+          categoryId: categoryId[cat],
+        },
+      });
+    }
+
+    const updateBook = await this.prisma.books.update({
+      where: {
+        id,
+      },
+      data: rest,
+    });
+
+    const newBookWithCategoryAndAuthor: IBook =
+      await this.getBookWithCategoryAndAuthor(updateBook);
+
+    return newBookWithCategoryAndAuthor;
+  }
+
+  public async deleteBook(id: number): Promise<IBook> {
+    const isOldBook = await this.prisma.books.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!isOldBook) {
+      throw new AppError({
+        httpCode: HttpCodes.BAD_REQUEST,
+        description: "Such a book doesn't exist",
+      });
+    }
+
+    const deleteBook = await this.prisma.books.delete({
+      where: {
+        id,
+      },
+    });
+
+    return deleteBook;
+  }
+}
+
+interface IFrontBook extends IBook {
+  author: IAuthor;
+  categoryId: number[];
 }

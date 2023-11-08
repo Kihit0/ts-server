@@ -24,7 +24,7 @@ model User {
   tokens Token?
 
   role   Role @relation(fields: [roleId], references: [id])
-  roleId Int  @unique
+  roleId Int
 
   Favorite Favorite[]
 }
@@ -45,7 +45,7 @@ model Token {
 model Role {
   id   Int    @id @default(autoincrement())
   name String
-  user User?
+  user User[]
 }
 
 model Books {
@@ -61,7 +61,7 @@ model Books {
   //Relation fields
 
   serias   Serias @relation(fields: [seriasId], references: [id], onDelete: Cascade)
-  seriasId Int    @unique
+  seriasId Int
 
   publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   publisherId Int

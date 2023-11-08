@@ -12,7 +12,7 @@ import {
   QueryParam,
 } from "routing-controllers";
 import { HttpCodes } from "@enums/HttpStatusCode";
-import { IBook } from "@interfaces/root.interface";
+import { IAuthor, IBook } from "@interfaces/root.interface";
 import { BookService } from "./book.service";
 
 @JsonController("/book")
@@ -61,10 +61,11 @@ export class BookController {
   @Authorized(["admin", "manager"])
   @Post("")
   @HttpCode(HttpCodes.CREATED)
-  public async createBook(@Body() body: IBook): Promise<any> {
+  public async createBook(@Body() body: ICreateBook): Promise<IOutput> {
+    const newBook = await this.BookService.createBook(body);
     return {
       code: HttpCodes.CREATED,
-      data: {},
+      data: newBook,
     };
   }
 
@@ -73,23 +74,30 @@ export class BookController {
   @HttpCode(HttpCodes.OK)
   public async updateBook(
     @Param("id") id: number,
-    @Body() body: IBook
-  ): Promise<any> {
+    @Body() body: ICreateBook
+  ): Promise<IOutput> {
+    const update = await this.BookService.updateBook(id, body);
     return {
       code: HttpCodes.OK,
-      data: {},
+      data: update,
     };
   }
 
   @Authorized(["admin", "manager"])
   @Delete("/:id")
   @HttpCode(HttpCodes.NO_CONTENT)
-  public async deleteBook(@Param("id") id: number): Promise<any> {
+  public async deleteBook(@Param("id") id: number): Promise<IOutput> {
+    const deleteBook = await this.BookService.deleteBook(id);
     return {
       code: HttpCodes.NO_CONTENT,
-      data: {},
+      data: deleteBook,
     };
   }
+}
+
+interface ICreateBook extends IBook {
+  author: IAuthor;
+  categoryId: number[];
 }
 
 interface IOutput {
