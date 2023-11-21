@@ -108,6 +108,7 @@ class App {
           description: "Access denied",
         });
       },
+      cors: true,
       routePrefix: "/api",
       controllers: [
         UserController,
