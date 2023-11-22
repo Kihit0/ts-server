@@ -21,7 +21,7 @@ import { HttpCodes } from "@enums/HttpStatusCode";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8089;
 
 class App {
   private prisma: PrismaClient;
